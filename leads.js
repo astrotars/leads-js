@@ -236,7 +236,7 @@
     window.onload = function() {
 
         // checking to see if we have at least one form on the page
-        if (document.getElementsByTagName('form').length > 0) {
+        if ($('form').length > 0) {
 
             var gravity = $('.gfield').length > 0; // Tell us if we should handle gravity forms
 
