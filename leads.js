@@ -177,21 +177,15 @@
 
     var query = window.location.search; // we just want the query string
 
-    if (utm_medium == 'cpc') { // first we try to see if this is a CPC/PPC request
 
-        info.medium = 'ppc'; 
-        // grab all of the other fields
-        info.ppc_source = getParameterByName('utm_source');
-        info.ppc_campaign = getParameterByName('utm_campaign');
-        info.ppc_content = getParameterByName('utm_content');
-        info.ppc_keyword = getParameterByName('utm_keyword');
-
+    if (info.external_referrer) {
+        info.medium = 'referring';
     }
 
     // seo
     // if the above didn't fire (it takes priority), then lets see if its from a search engine via the referring URL
     // I'm combining all of the search engines into this regex and then we will use the match to return the engine
-    else if (seo_matches = document.referrer.match(new RegExp('('+ search_engines.join('|') + ')', 'i'))) {
+    if (seo_matches = document.referrer.match(new RegExp('('+ search_engines.join('|') + ')', 'i'))) {
 
         info.medium = 'seo';
         info.seo_source = seo_matches[1].split('.')[0];
@@ -206,10 +200,23 @@
 
     }
 
+    // Perhaps it is a PPC request
+    if (utm_medium == 'cpc') {
+
+        info.medium = 'ppc'; 
+        // grab all of the other fields
+        info.ppc_source = getParameterByName('utm_source');
+        info.ppc_campaign = getParameterByName('utm_campaign');
+        info.ppc_content = getParameterByName('utm_content');
+        info.ppc_keyword = getParameterByName('utm_keyword');
+    }
+
+
+
     info.internal_url = (info.internal_referrer || ''); // if our internal referrer is false, just make it blank
 
     if (!getCookie(cookieName)) { // we don't have a cookie, so lets serialize our data and save it
-        writeCookie(cookieName, JSON.stringify(info));
+        writeCookie(cookieName, JSON.stringify(info), 30);
     }
 
     var internal = info.internal_referrer;
@@ -220,7 +227,7 @@
     if (cookie.external_referrer != info.external_referrer) {
 
         // re-write external referrer
-        writeCookie(cookieName, JSON.stringify(info));
+        writeCookie(cookieName, JSON.stringify(info), 30); // keep the cookie active for 30 days
 
     }
 
