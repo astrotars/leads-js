@@ -17,9 +17,9 @@ The cookie is a session cookie.  It will expire as soon as the browser closes.  
 
 ##Search Engines
 The search engines set up to activate SEO mode are:
-* google
+* google (not much information can be gathered if the user is logged into google...or coming from Chrome browser's search feature)
 * bing
-* yahoo
+* yahoo (uses the `p` query parameter instead of `q`)
 * ask
 
 ##Order of Logic

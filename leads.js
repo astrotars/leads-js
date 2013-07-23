@@ -192,6 +192,10 @@
 
         var queryMatches = document.referrer.match(/q\=([^\&]+)/); // grab the "search query" -- usually in a "q" get variable
 
+        if (info.seo_source == 'yahoo') { // they just have to be difficult (uses 'p' instead of 'q' for search)
+            queryMatches = document.referrer.match(/p\=([^\&]+)/); // grab the "search query" -- usually in a "q" get variable
+        }        
+
         if (queryMatches && queryMatches.length === 2) {
             info.seo_query = queryMatches[1].split('+').join(' '); // spaces are turned into pluses, so switch those out
         } else {
@@ -202,14 +206,14 @@
 
     // Perhaps it is a PPC request
     if (utm_medium == 'cpc') {
-
-        info.medium = 'ppc'; 
-        // grab all of the other fields
-        info.ppc_source = getParameterByName('utm_source');
-        info.ppc_campaign = getParameterByName('utm_campaign');
-        info.ppc_content = getParameterByName('utm_content');
-        info.ppc_keyword = getParameterByName('utm_keyword');
+        info.medium = 'ppc';
     }
+
+    // grab all of the other fields regardless of the medium definition (they may still be there)
+    info.ppc_source = getParameterByName('utm_source');
+    info.ppc_campaign = getParameterByName('utm_campaign');
+    info.ppc_content = getParameterByName('utm_content');
+    info.ppc_keyword = getParameterByName('utm_keyword');
 
 
 
