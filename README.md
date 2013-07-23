@@ -36,8 +36,10 @@ The reason for that is JSON.parse and stringify don't exist before IE8.  If that
 
 ##Quick example:
 
+```
 <!--[if lte IE 7]>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/json2/20121008/json2.js"></script>
 <![endif]-->
 <script>LEADS_DEBUG=true;</script>
 <script type="text/javascript" src="path/to/leads.js"></script>
+```
