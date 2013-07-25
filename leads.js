@@ -230,8 +230,11 @@
     // the user strolled back over here from another application but using the same session
     if (cookie.external_referrer != info.external_referrer) {
 
-        // re-write external referrer
-        writeCookie(cookieName, JSON.stringify(info), 30); // keep the cookie active for 30 days
+    	// lets only do this if we know the original request was listed as "other"
+    	if (cookie.medium == 'other') { // if the current source is "other" then whatever.  rewrite anyway.
+	        // re-write external referrer
+	        writeCookie(cookieName, JSON.stringify(info), 30); // keep the cookie active for 30 days
+	    }
 
     }
 
