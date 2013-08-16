@@ -23,9 +23,9 @@ The search engines set up to activate SEO mode are:
 * ask
 
 ##Order of Logic
-If the script figures out that the request is from a search engine, it will override PPC as the medium.  I believe the script will still save everything about PPC, but the medium will be altered.
+If the script figures out that the request is from a PPC click, it will override SEO's medium.  The script will still save everything about PPC and SEO, but the medium will be altered.
 
-Though, I don't think that it will really matter.  It has only really come up with testing and that will probably never happen in production.
+The tracking cookie will only get rewritten if the request comes from a different host name AND if the original request was "other".
 
 ##Browser Support
 The script doesn't require anything to run, but I do believe it won't run in IE7 and below.
