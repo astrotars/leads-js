@@ -126,14 +126,11 @@
             'external_url', 
             'internal_url', 
             'medium', 
-            'ppc_source', 
-            'ppc_campaign', 
-            'ppc_keyword', 
-            'ppc_content', 
-            'seo_source', 
-            'seo_query'
-        ],
-        seo_matches;
+            'source', 
+            'campaign', 
+            'term', 
+            'content'
+        ];
 
     // pre-populate fields to blank strings
     for (var i = 0; i < inputNames.length; i++) {
@@ -185,21 +182,23 @@
     // seo
     // if the above didn't fire (it takes priority), then lets see if its from a search engine via the referring URL
     // I'm combining all of the search engines into this regex and then we will use the match to return the engine
-    if (seo_matches = document.referrer.match(new RegExp('('+ search_engines.join('|') + ')', 'i'))) {
+    var seo_matches = document.referrer.match(new RegExp('('+ search_engines.join('|') + ')', 'i'));
+
+    if (seo_matches) {
 
         info.medium = 'seo';
-        info.seo_source = seo_matches[1].split('.')[0];
+        info.source = seo_matches[1].split('.')[0];
 
         var queryMatches = document.referrer.match(/q\=([^\&]+)/); // grab the "search query" -- usually in a "q" get variable
 
-        if (info.seo_source == 'yahoo') { // they just have to be difficult (uses 'p' instead of 'q' for search)
+        if (info.source == 'yahoo') { // they just have to be difficult (uses 'p' instead of 'q' for search)
             queryMatches = document.referrer.match(/p\=([^\&]+)/); // grab the "search query" -- usually in a "q" get variable
         }        
 
         if (queryMatches && queryMatches.length === 2) {
-            info.seo_query = queryMatches[1].split('+').join(' '); // spaces are turned into pluses, so switch those out
+            info.term = queryMatches[1].split('+').join(' '); // spaces are turned into pluses, so switch those out
         } else {
-            info.seo_query = false; // well, we didn't have a search.  the user could have been logged in.
+            info.term = false; // well, we didn't have a search.  the user could have been logged in.
         }
 
     }
@@ -210,10 +209,10 @@
     }
 
     // grab all of the other fields regardless of the medium definition (they may still be there)
-    info.ppc_source = getParameterByName('utm_source');
-    info.ppc_campaign = getParameterByName('utm_campaign');
-    info.ppc_content = getParameterByName('utm_content');
-    info.ppc_keyword = getParameterByName('utm_keyword');
+    info.source = getParameterByName('utm_source');
+    info.campaign = getParameterByName('utm_campaign');
+    info.content = getParameterByName('utm_content');
+    info.term = getParameterByName('utm_keyword');
 
 
 
