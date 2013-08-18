@@ -206,13 +206,14 @@
     // Perhaps it is a PPC request
     if (utm_medium == 'cpc') {
         info.medium = 'ppc';
+        info.source = getParameterByName('utm_source');
+        info.term = getParameterByName('utm_keyword');
     }
 
     // grab all of the other fields regardless of the medium definition (they may still be there)
-    info.source = getParameterByName('utm_source');
     info.campaign = getParameterByName('utm_campaign');
     info.content = getParameterByName('utm_content');
-    info.term = getParameterByName('utm_keyword');
+    
 
 
 
