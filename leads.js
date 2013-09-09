@@ -207,7 +207,7 @@
     if (utm_medium == 'cpc') {
         info.medium = 'ppc';
         info.source = getParameterByName('utm_source');
-        info.term = getParameterByName('utm_keyword');
+        info.term = getParameterByName('utm_term');
     }
 
     // grab all of the other fields regardless of the medium definition (they may still be there)
