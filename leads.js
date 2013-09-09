@@ -147,14 +147,14 @@
     // internal referrer
     if (referringURI.host == window.location.host) { // if the hosts are the same... internal URL
 
-        info.external_referrer = false; // this will tell the script later that we are using internal URL
-        info.internal_referrer = document.referrer;
+        info.external_url = false; // this will tell the script later that we are using internal URL
+        info.internal_url = document.referrer;
 
     // external referrer
     } else {
 
-        info.external_referrer = document.referrer;
-        info.internal_referrer = false; // same as above, let the script later know this is internal
+        info.external_url = document.referrer;
+        info.internal_url = false; // same as above, let the script later know this is internal
 
     }
 
@@ -175,7 +175,7 @@
     var query = window.location.search; // we just want the query string
 
 
-    if (info.external_referrer) {
+    if (info.external_url) {
         info.medium = 'referring';
     }
 
@@ -217,20 +217,20 @@
 
 
 
-    info.internal_url = (info.internal_referrer || ''); // if our internal referrer is false, just make it blank
+    info.internal_url = (info.internal_url || ''); // if our internal referrer is false, just make it blank
 
     if (!getCookie(cookieName)) { // we don't have a cookie, so lets serialize our data and save it
         writeCookie(cookieName, JSON.stringify(info), 30);
     }
 
-    var internal = info.internal_referrer;
+    var internal = info.internal_url;
     var cookie = JSON.parse(getCookie(cookieName)); // turn our cookie into an object
 
     // if cookie is set, and user is coming in from another URL -- meaning 
     // the user strolled back over here from another application but using the same session
-    if (cookie.external_referrer != info.external_referrer) {
+    if (cookie.external_url != info.external_url) {
 
-    	// lets only do this if we know the original request was listed as "other"
+    	// only do this if we know the original request was listed as "other"
     	if (cookie.medium == 'other') { // if the current source is "other" then whatever.  rewrite anyway.
 	        // re-write external referrer
 	        writeCookie(cookieName, JSON.stringify(info), 30); // keep the cookie active for 30 days
@@ -239,10 +239,6 @@
     }
 
     info = cookie; // rename our cookie object to 'info'
-
-    // these fields were named differently above.  rename them here too
-    info.external_url = info.external_referrer;
-    info.internal_url = internal;
 
     log(info); // if debugging is on, show a list of everything we are keeping track on each request
 
