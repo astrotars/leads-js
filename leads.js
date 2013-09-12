@@ -32,14 +32,29 @@ var Leads = function(cookieName, formPrefix, debug) {
         this.output.internal_url = this.getInternalURL() || '';
         this.save();
     }
+
 };
 
 Leads.prototype.process = function() {
-    this.output.external_url = this.getExternalURL() || '';
-    this.output.internal_url = this.getInternalURL() || '';
 
     var medium = this.getMedium(),
         query  = window.location.search;
+
+    if (this.isSameHost()) {
+
+        this.output.internal_url = this.getInternalURL() || '';
+
+        if (medium) {
+            this.output.medium = medium.type;
+        }
+        
+        this.save();
+
+        return;
+    }
+
+    this.output.external_url = this.getExternalURL() || '';
+    this.output.internal_url = this.getInternalURL() || '';
 
     this.output.medium = 'other';
 
@@ -52,6 +67,7 @@ Leads.prototype.process = function() {
     if (medium.type == 'ppc') {
         this.output.medium = 'ppc';
         this.output.term = this.getParameterByName('utm_term');
+        this.output.source = medium.source;
     }
 
     var extra = this.getExtraData();
@@ -87,7 +103,9 @@ Leads.prototype.writeCookie = function(value, expires) {
     var date = new Date();
     date.setDate(date.getDate() + expires); // set an expiration date
 
-    var data = escape(value) + ((expires === null) ? '' : '; expires='+ date.toUTCString());
+    var domain = window.location.host.replace('www', '');
+
+    var data = escape(value) + ((expires === null) ? '' : ';expires='+ date.toUTCString()) +';domain='+ domain + ';path=/';
     document.cookie = this.cookieName + "=" + data; // write the cookie
 };
 
@@ -123,14 +141,15 @@ Leads.prototype.getMedium = function() {
 
     var seo_matches = document.referrer.match(new RegExp('('+ this.searchEngines.join('|') + ')', 'i'));
 
-    if (seo_matches) {
-        return { type: 'seo', source: seo_matches[1].split('.')[0] };
-    }
-
     if (this.getParameterByName('utm_medium') == 'cpc') {
         
         return { type: 'ppc', source: this.getParameterByName('utm_source') };
     }
+
+    if (seo_matches) {
+        return { type: 'seo', source: seo_matches[1].split('.')[0] };
+    }
+
 
     return false;
 
@@ -138,11 +157,11 @@ Leads.prototype.getMedium = function() {
 
 Leads.prototype.getSEOData = function() {
 
+    var medium = this.getMedium();
 
     var queryMatches = document.referrer.match(/q\=([^\&]+)/); // grab the "search query" -- usually in a "q" get variable
 
-
-    if (info.source == 'yahoo') { // they just have to be difficult (uses 'p' instead of 'q' for search)
+    if (medium.source == 'yahoo') { // they just have to be difficult (uses 'p' instead of 'q' for search)
         queryMatches = document.referrer.match(/p\=([^\&]+)/); // grab the "search query" -- usually in a "q" get variable
     }
 
@@ -215,9 +234,38 @@ Leads.prototype.get = function(name) {
     return this.info[name];
 };
 
-(function() {
+Leads.domReady = function(fn) {
+    /* Internet Explorer */
+    /*@cc_on
+    @if (@_win32 || @_win64)
+        document.write('<script id="ieScriptLoad" defer src="//:"><\/script>');
+        document.getElementById('ieScriptLoad').onreadystatechange = function() {
+            if (this.readyState == 'complete') {
+                fn();
+            }
+        };
+    @end @*/
+    /* Mozilla, Chrome, Opera */
+    if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', fn, false);
+    }
+    /* Safari, iCab, Konqueror */
+    if (/KHTML|WebKit|iCab/i.test(navigator.userAgent)) {
+        var DOMLoadTimer = setInterval(function () {
+            if (/loaded|complete/i.test(document.readyState)) {
+                fn();
+                clearInterval(DOMLoadTimer);
+            }
+        }, 10);
+    }
+    /* Other web browsers */
+    window.onload = fn;
+};
+
+Leads.domReady(function() {
 
     var leads = new Leads('__gfLeads', 'gf_', true);
+
     if (!document.querySelectorAll) {
         
         if (console) {
@@ -230,4 +278,4 @@ Leads.prototype.get = function(name) {
     leads.updateForm();
 
 
-})();
+});
