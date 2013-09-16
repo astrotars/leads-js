@@ -12,16 +12,14 @@ Using without Gravity Forms, simply use the input name field as the identifier:
 ```
 Currently, the following are allowed:
 
-```
-gf_external_url
-gf_internal_url
-gf_medium
-gf_source
-gf_campaign
-gf_term
-gf_content
-gf_gclid
-```
+* gf_external_url
+* gf_internal_url
+* gf_medium
+* gf_source
+* gf_campaign
+* gf_term
+* gf_content
+* gf_gclid
 
 When using Gravity Forms, the fieldname is actually a class placed on a container element (`li`).  Leads.js will pick up either of these.
 
