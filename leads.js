@@ -19,7 +19,8 @@ var Leads = function(cookieName, formPrefix, debug) {
         'source', 
         'campaign', 
         'term', 
-        'content'
+        'content',
+        'gclid'
     ];
 
     for (var i = 0; i <= this.inputNames.length; i++) {
@@ -73,6 +74,7 @@ Leads.prototype.process = function() {
     var extra = this.getExtraData();
     this.output.campaign = extra.campaign;
     this.output.content = extra.content;
+    this.output.gclid = extra.gclid;
 
     this.save();
 };
@@ -180,7 +182,8 @@ Leads.prototype.getExtraData = function() {
     // grab all of the other fields regardless of the medium definition (they may still be there)
     return {
         campaign: this.getParameterByName('utm_campaign'),
-        content: this.getParameterByName('utm_content')
+        content: this.getParameterByName('utm_content'),
+        gclid: this.getParameterByName('gclid')
     };
 };
 
