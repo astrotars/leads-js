@@ -4,6 +4,15 @@ A script that conveniently stands alone from any javascript frameworks to side l
 
 Designed initially to work with the Gravity Forms system, but has been updated to support generic forms as well.
 
+Using without Gravity Forms, simply use the input name field as the identifier:
+
+```
+<input type="hidden" name="gf_medium" />
+<input type="hidden" name="gf_gclid" />
+```
+
+When using Gravity Forms, the fieldname is actually a class placed on a container element (`li`).  Leads.js will pick up either of these.
+
 ##Configurable Options
 LEADS_DEBUG - Will allow console logs
 LEADS_PREFIX - Changes the prefix of the fields it looks for ('gf_medium') 
