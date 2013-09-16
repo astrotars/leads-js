@@ -21,6 +21,8 @@ Currently, the following are allowed:
 * gf_content
 * gf_gclid
 
+*The gf_ prefix can be modified using global. See configurable options for more info.*
+
 When using Gravity Forms, the fieldname is actually a class placed on a container element (`li`).  Leads.js will pick up either of these.
 
 ##Configurable Options
