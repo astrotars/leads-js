@@ -208,6 +208,8 @@ Leads.prototype.save = function() {
 
 Leads.prototype.updateForm = function() {
 
+    console.log(this.output);
+
     var $ = this.getElement;
 
     // checking to see if we have at least one form on the page
@@ -221,7 +223,7 @@ Leads.prototype.updateForm = function() {
             var field = this.inputNames[i],
                 elm = gravity ? $('.'+ this.prefix + field + ' input') : $('[name='+ this.prefix + field + ']');
 
-            this.log(elm);
+            // this.log(elm);
 
             if (elm.length > 0) { // we have a match
 
@@ -251,6 +253,7 @@ Leads.domReady = function(fn) {
     /* Mozilla, Chrome, Opera */
     if (document.addEventListener) {
         document.addEventListener('DOMContentLoaded', fn, false);
+        return;
     }
     /* Safari, iCab, Konqueror */
     if (/KHTML|WebKit|iCab/i.test(navigator.userAgent)) {
@@ -260,6 +263,7 @@ Leads.domReady = function(fn) {
                 clearInterval(DOMLoadTimer);
             }
         }, 10);
+        return;
     }
     /* Other web browsers */
     window.onload = fn;
@@ -267,7 +271,7 @@ Leads.domReady = function(fn) {
 
 Leads.domReady(function() {
 
-    var leads = new Leads('__gfLeads', 'gf_', true);
+    var leads = new Leads((LEADS_COOKIE_NAME || '__gfLeads'), (LEADS_PREFIX || 'gf_'), (LEADS_DEBUG || false));
 
     if (!document.querySelectorAll) {
         
